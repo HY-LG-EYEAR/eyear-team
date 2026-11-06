@@ -25,17 +25,14 @@ EYEAR 팀원끼리 주고받을 내용을 두는 레포다. 팀원마다 inbox �
 `<id>`는 자기 id(banseok, hyochang, jungbin, yewon)로 바꾼다. CLAUDE.md가 없으면 새로 만든다.
 ```markdown
 ## 팀 공유 (eyear-team inbox)
-- 다른 팀원에게 알릴 내용은 `../eyear-team/inbox/<받는 사람 id>.md`에 쓴다. 규칙은 아래 RULES.md를 따른다.
-- 내 inbox는 `../eyear-team/inbox/<id>.md`. 세션 시작 때 항목이 있으면 작업 전에 먼저 알린다.
-
-@../eyear-team/RULES.md
-@../eyear-team/inbox/<id>.md
+- 다른 팀원에게 알릴 내용은 `../eyear-team/inbox/<받는 사람 id>.md`에 쓴다.
+- 세션 시작 훅이 eyear-team을 pull 하고 RULES.md와 내 inbox(`inbox/<id>.md`)를 출력해 준다.
+  규칙은 RULES.md를 따르고, inbox에 항목이 있으면 작업 전에 먼저 알린다.
 ```
-처음 한 번은 Claude Code가 외부 파일을 불러와도 되는지 묻는다. 허용하면 된다.
 
-### 3. 작업 레포에 `.claude/settings.local.json` 만들기 (권장)
+### 3. 작업 레포에 `.claude/settings.local.json` 만들기 (필수)
 이 설정을 넣으면 두 가지가 된다.
-- 세션을 시작할 때 이 레포를 자동으로 pull 한다.
+- 세션을 시작할 때 이 레포를 pull 하고, RULES.md와 자기 inbox를 Claude에게 보여 준다. CLAUDE.md의 `@../` import는 작업 폴더 밖 파일이라 불러와지지 않아서 이 방법을 쓴다.
 - Claude가 eyear-team 폴더를 작업 범위로 인식해서 다른 팀원 inbox에 쓸 수 있다.
 
 개인 설정이므로 커밋하지 않는다. `.gitignore`에 `.claude/settings.local.json`을 추가한다.
@@ -50,7 +47,7 @@ EYEAR 팀원끼리 주고받을 내용을 두는 레포다. 팀원마다 inbox �
         "hooks": [
           {
             "type": "command",
-            "command": "git -C \"$CLAUDE_PROJECT_DIR/../eyear-team\" pull --ff-only -q 2>/dev/null || echo \"eyear-team pull 실패: inbox가 최신이 아닐 수 있음 (원격 설정·네트워크·로컬 변경 확인)\"",
+            "command": "d=\"$CLAUDE_PROJECT_DIR/../eyear-team\"; git -C \"$d\" pull --ff-only -q 2>/dev/null || echo \"[eyear-team] pull 실패: 아래 내용이 최신이 아닐 수 있음 (원격 설정·네트워크·로컬 변경 확인)\"; cat \"$d/RULES.md\" \"$d/inbox/<id>.md\"",
             "timeout": 20
           }
         ]

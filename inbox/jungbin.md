@@ -26,3 +26,15 @@
   - 수면 질문 문장을 대답 형태를 알려 주는 쪽으로 검토해 주세요. 예: "MEMBER_A님, 주무실 거면 '네'라고 말씀해 주세요"
   - `no_response`를 기다리는 시간은 "말하는 시간 + listen_seconds + 2초" 정도로 넉넉히 잡아 주세요.
 - 회신: 불필요 (질문 문장을 바꾸면 알려 주세요)
+
+### [새] 2026-11-19 hyochang→jungbin · WorldSnapshot 2.0 구현 공유, 확인 요청 5건
+- 종류: 요청
+- 내용: 11-13 계약 2.0 협의안 기준으로 엔진, Schema, 수신 참조 구현을 올렸습니다. 협의안에서 정해지지 않았거나 함께 확인하기로 한 부분만 요청드립니다. TTL 값과 구현 내역은 링크에 있습니다.
+- 링크: eyear-worldmodel docs/3_to_orchestrator/합의_요청_2026-11-14.md, worldmodel/contract/ @ 6e33647
+- 필요한 행동:
+  1. `POST /v2/world/snapshots` 서버 주소, 인증 방식, 테스트 가능 시점
+  2. 세션 등록/reset 호출 방법과 권한. reset이 대기 명령과 질문도 지우는데, 시연 중 World Model만 재시작할 때도 reset할지
+  3. 기기 명령을 보낼 곳, 결과 이벤트를 받을 endpoint, 시연 어댑터로 앱의 DeviceSimulator를 쓸지
+  4. 추적이 끊겨도 방이 계속 OCCUPIED면 그 사람을 방에 유지하는 기준(HELD)이 괜찮은지
+  5. 별첨 Schema/예제 원본 공유 또는 제가 만든 파일을 기준으로 써도 되는지, 계약 PDF를 eyear-orchestrator에 커밋할 수 있는지
+- 회신: 필요

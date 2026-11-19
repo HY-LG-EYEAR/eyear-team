@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>body{margin:0}</style>
+</head>
+<body>
+<title>EYEAR 연결 구조</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: 한 장짜리 배선도. 위: 브로커를 가운데 둔 연결 그림, 아래: 흐름별 표와 담당자별 할 일 */
+:root {
+  --bg: #f3f5f6;
+  --surface: #ffffff;
+  --ink: #18222a;
+  --ink-2: #56636b;
+  --line: #d4dbde;
+  --mqtt: #1f6f8b;
+  --http: #8a4fbf;
+  --node: #0f7a64;
+  --wm: #2a62b8;
+  --orch: #7a45b0;
+  --app: #a86a10;
+  --dev: #5b6a73;
+  --ok: #1d7a3e;
+  --ok-bg: #e2f3e8;
+  --bad: #b3261e;
+  --bad-bg: #fbe4e2;
+  --unk: #8a6100;
+  --unk-bg: #fbf0d4;
+  --font-body: "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #11171b; --surface: #182128; --ink: #e2e9ec; --ink-2: #98a6ad; --line: #2c3840;
+    --mqtt: #5ab8d6; --http: #c39af0; --node: #4cc9a8; --wm: #7aa7f0; --orch: #b98ef0; --app: #e2a64a; --dev: #9aa9b1;
+    --ok: #6fd393; --ok-bg: #173323; --bad: #ff8f86; --bad-bg: #3a1b19; --unk: #f0c45a; --unk-bg: #352c12;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #11171b; --surface: #182128; --ink: #e2e9ec; --ink-2: #98a6ad; --line: #2c3840;
+  --mqtt: #5ab8d6; --http: #c39af0; --node: #4cc9a8; --wm: #7aa7f0; --orch: #b98ef0; --app: #e2a64a; --dev: #9aa9b1;
+  --ok: #6fd393; --ok-bg: #173323; --bad: #ff8f86; --bad-bg: #3a1b19; --unk: #f0c45a; --unk-bg: #352c12;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--font-body); font-size: 15px; line-height: 1.6;
+}
+.wrap {
+  max-width: 1120px; margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 28px 56px;
+  display: grid; gap: 22px;
+}
+header { display: grid; gap: 6px; }
+.eyebrow { font-size: 12px; letter-spacing: .08em; color: var(--ink-2); font-weight: 500; }
+h1 { margin: 0; font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 700; text-wrap: balance; line-height: 1.25; }
+.lede { margin: 0; color: var(--ink-2); max-width: 70ch; }
+h2 { margin: 0 0 10px; font-size: 1.1rem; font-weight: 600; text-wrap: balance; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 18px; min-width: 0; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 13px; color: var(--ink-2); margin-top: 10px; }
+.legend span { display: inline-flex; align-items: center; gap: 8px; }
+.sw { width: 26px; height: 0; border-top: 3px solid; display: inline-block; }
+.sw.mqtt { border-color: var(--mqtt); }
+.sw.http { border-color: var(--http); border-top-style: dashed; }
+.sw.tbd { border-color: var(--ink-2); border-top-style: dotted; }
+.scroll { overflow-x: auto; }
+svg.diagram { display: block; width: 100%; min-width: 820px; height: auto; }
+.box { fill: var(--surface); stroke-width: 2; }
+.b-node { stroke: var(--node); } .b-wm { stroke: var(--wm); } .b-orch { stroke: var(--orch); }
+.b-app { stroke: var(--app); } .b-dev { stroke: var(--dev); stroke-dasharray: 6 5; }
+.b-broker { fill: var(--bg); stroke: var(--mqtt); stroke-width: 2.5; }
+.t-name { font: 700 19px var(--font-body); fill: var(--ink); }
+.t-who { font: 600 14px var(--font-body); }
+.c-node { fill: var(--node); } .c-wm { fill: var(--wm); } .c-orch { fill: var(--orch); } .c-app { fill: var(--app); } .c-dev { fill: var(--dev); } .c-mqtt { fill: var(--mqtt); }
+.t-sub { font: 400 13px var(--font-body); fill: var(--ink-2); }
+.t-mono { font: 400 12px var(--font-mono); fill: var(--ink-2); }
+.e-mqtt { stroke: var(--mqtt); stroke-width: 3; fill: none; }
+.e-http { stroke: var(--http); stroke-width: 2.5; fill: none; stroke-dasharray: 9 6; }
+.e-tbd { stroke: var(--ink-2); stroke-width: 2; fill: none; stroke-dasharray: 2 5; stroke-linecap: round; }
+.tag { fill: var(--surface); stroke: var(--line); stroke-width: 1; }
+.t-tag { font: 600 13px var(--font-body); fill: var(--ink); }
+.t-tag.mqtt { fill: var(--mqtt); } .t-tag.http { fill: var(--http); } .t-tag.tbd { fill: var(--ink-2); }
+.m-mqtt { fill: var(--mqtt); } .m-http { fill: var(--http); } .m-tbd { fill: var(--ink-2); }
+.dot-ok { fill: var(--ok); } .dot-bad { fill: var(--bad); } .dot-unk { fill: var(--unk); }
+.t-st { font: 500 12px var(--font-body); }
+.t-st.ok { fill: var(--ok); } .t-st.bad { fill: var(--bad); } .t-st.unk { fill: var(--unk); }
+
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th, td { text-align: left; padding: 10px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-weight: 500; color: var(--ink-2); font-size: 13px; white-space: nowrap; }
+td.n { font-weight: 700; white-space: nowrap; font-variant-numeric: tabular-nums; }
+code { font-family: var(--font-mono); font-size: 12.5px; overflow-wrap: anywhere; }
+.via { display: inline-block; font-size: 12px; font-weight: 600; padding: 1px 8px; border-radius: 999px; margin-right: 6px; border: 1px solid; white-space: nowrap; }
+.via.mqtt { color: var(--mqtt); border-color: var(--mqtt); }
+.via.http { color: var(--http); border-color: var(--http); }
+.via.tbd { color: var(--ink-2); border-color: var(--ink-2); }
+.st { display: inline-block; font-size: 12.5px; font-weight: 600; padding: 2px 9px; border-radius: 6px; white-space: nowrap; }
+.st.ok { color: var(--ok); background: var(--ok-bg); }
+.st.bad { color: var(--bad); background: var(--bad-bg); }
+.st.unk { color: var(--unk); background: var(--unk-bg); }
+.note { font-size: 13px; color: var(--ink-2); margin-top: 4px; }
+.who-node { color: var(--node); } .who-wm { color: var(--wm); } .who-orch { color: var(--orch); } .who-app { color: var(--app); }
+.todo { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 760px) { .todo { grid-template-columns: minmax(0, 1fr); } }
+.todo .card h3 { margin: 0 0 8px; font-size: 1rem; font-weight: 600; }
+.todo ul { margin: 0; padding-left: 1.15em; display: grid; gap: 4px; }
+.foot { font-size: 13px; color: var(--ink-2); }
+@media (max-width: 760px) {
+  thead { display: none; }
+  table, tbody, tr, td { display: block; width: 100%; }
+  tr { border-bottom: 1px solid var(--line); padding: 8px 0; }
+  td { border: 0; padding: 3px 0; }
+}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">EYEAR · 팀 공유 · 2026-11-19 각 레포 코드 기준</div>
+    <h1>EYEAR 연결 구조</h1>
+    <p class="lede">실제 Node, 월드모델, 중앙 에이전트, 가전, 앱이 무엇으로 이어지는지와 지금 각 구간이 준비됐는지를 정리했습니다. MQTT는 모두 반석 노트북의 브로커를 거칩니다. 월드모델에서 중앙으로는 HTTP입니다.</p>
+  </header>
+
+  <section class="card" aria-label="연결 그림">
+    <div class="scroll">
+      <svg class="diagram" viewBox="0 0 1040 600" role="img" aria-label="Node, 월드모델, 중앙, 가전, 앱이 MQTT 브로커와 HTTP로 연결된 그림">
+        <defs>
+          <marker id="am" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="m-mqtt" d="M0,0 L10,5 L0,10 z"/></marker>
+          <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="m-http" d="M0,0 L10,5 L0,10 z"/></marker>
+          <marker id="at" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="m-tbd" d="M0,0 L10,5 L0,10 z"/></marker>
+        </defs>
+
+        <!-- 연결선 (상자보다 먼저 그림) -->
+        <!-- Node ↔ 브로커 -->
+        <path class="e-mqtt" d="M262 300 H 398" marker-start="url(#am)" marker-end="url(#am)"/>
+        <!-- 브로커 ↔ 월드모델 -->
+        <path class="e-mqtt" d="M600 255 L 770 132" marker-start="url(#am)" marker-end="url(#am)"/>
+        <!-- 브로커 ↔ 중앙 -->
+        <path class="e-mqtt" d="M610 340 L 770 452" marker-start="url(#am)" marker-end="url(#am)"/>
+        <!-- 브로커 ↔ 가전 -->
+        <path class="e-mqtt" d="M520 347 V 448" marker-start="url(#am)" marker-end="url(#am)"/>
+        <!-- 월드모델 → 중앙 HTTP -->
+        <path class="e-http" d="M900 168 V 410" marker-end="url(#ah)"/>
+        <!-- 앱 → 월드모델 (미정) -->
+        <path class="e-tbd" d="M632 70 H 766" marker-end="url(#at)"/>
+        <!-- 앱 → 중앙 HTTP -->
+        <path class="e-http" d="M632 108 H 735 V 500 H 766" marker-end="url(#ah)"/>
+
+        <!-- 브로커 -->
+        <rect class="b-broker" x="400" y="253" width="240" height="94" rx="47"/>
+        <text class="t-name c-mqtt" x="520" y="290" text-anchor="middle" style="font-size:17px">MQTT 브로커</text>
+        <text class="t-sub" x="520" y="311" text-anchor="middle">mosquitto · 반석 노트북</text>
+        <text class="t-mono" x="520" y="330" text-anchor="middle">같은 와이파이 · 1883</text>
+
+        <!-- Node -->
+        <rect class="box b-node" x="30" y="222" width="232" height="156" rx="10"/>
+        <text class="t-name" x="48" y="254">방1 Node</text>
+        <text class="t-who c-node" x="48" y="276">신반석 · eyear-node</text>
+        <text class="t-sub" x="48" y="300">카메라 · 마이크 · 스피커</text>
+        <text class="t-sub" x="48" y="319">레이더 LD2450 · LD2410C</text>
+        <circle class="dot-ok" cx="54" cy="350" r="5"/>
+        <text class="t-st ok" x="66" y="354">보내기·받기 준비됨 (0.2)</text>
+
+        <!-- 월드모델 -->
+        <rect class="box b-wm" x="770" y="20" width="250" height="148" rx="10"/>
+        <text class="t-name" x="788" y="52">월드모델</text>
+        <text class="t-who c-wm" x="788" y="74">이효창 · eyear-worldmodel</text>
+        <text class="t-sub" x="788" y="98">방 메시지 → 집 전체 상태</text>
+        <circle class="dot-bad" cx="794" cy="126" r="5"/>
+        <text class="t-st bad" x="806" y="130">MQTT·HTTP 연결 코드 없음</text>
+        <circle class="dot-bad" cx="794" cy="148" r="5"/>
+        <text class="t-st bad" x="806" y="152">파서가 0.1만 받음</text>
+
+        <!-- 중앙 -->
+        <rect class="box b-orch" x="770" y="410" width="250" height="150" rx="10"/>
+        <text class="t-name" x="788" y="442">중앙 에이전트</text>
+        <text class="t-who c-orch" x="788" y="464">송정빈 · eyear-orchestrator</text>
+        <text class="t-sub" x="788" y="488">에이전트 4개 + 중앙 판단</text>
+        <text class="t-mono" x="788" y="508">HTTP :8765</text>
+        <circle class="dot-ok" cx="794" cy="536" r="5"/>
+        <text class="t-st ok" x="806" y="540">HTTP·MQTT 받는 코드 있음</text>
+
+        <!-- 가전 -->
+        <rect class="box b-dev" x="410" y="450" width="220" height="110" rx="10"/>
+        <text class="t-name" x="428" y="482">가전 (시뮬레이터)</text>
+        <text class="t-who c-dev" x="428" y="504">이효창 · sim/</text>
+        <circle class="dot-unk" cx="434" cy="532" r="5"/>
+        <text class="t-st unk" x="446" y="536">실제 MQTT 연결 확인 필요</text>
+
+        <!-- 앱 -->
+        <rect class="box b-app" x="410" y="30" width="222" height="110" rx="10"/>
+        <text class="t-name" x="428" y="62">앱</text>
+        <text class="t-who c-app" x="428" y="84">정예원 · eyear-app</text>
+        <text class="t-sub" x="428" y="106">선호 설정 · 운영자 제어</text>
+        <circle class="dot-unk" cx="434" cy="126" r="5"/>
+        <text class="t-st unk" x="446" y="130">연결 방식 확인 필요</text>
+
+        <!-- 흐름 번호 표지 -->
+        <rect class="tag" x="282" y="262" width="96" height="26" rx="13"/>
+        <text class="t-tag mqtt" x="330" y="280" text-anchor="middle">① ③ ④</text>
+        <rect class="tag" x="640" y="170" width="74" height="26" rx="13"/>
+        <text class="t-tag mqtt" x="677" y="188" text-anchor="middle">① ⑥</text>
+        <rect class="tag" x="626" y="376" width="88" height="26" rx="13"/>
+        <text class="t-tag mqtt" x="670" y="394" text-anchor="middle">③ ④ ⑤</text>
+        <rect class="tag" x="530" y="384" width="74" height="26" rx="13"/>
+        <text class="t-tag mqtt" x="567" y="402" text-anchor="middle">⑤ ⑥</text>
+        <rect class="tag" x="910" y="270" width="96" height="26" rx="13"/>
+        <text class="t-tag http" x="958" y="288" text-anchor="middle">② ⑦ HTTP</text>
+        <rect class="tag" x="660" y="40" width="58" height="24" rx="12"/>
+        <text class="t-tag tbd" x="689" y="57" text-anchor="middle">⑧</text>
+        <rect class="tag" x="690" y="230" width="82" height="24" rx="12"/>
+        <text class="t-tag http" x="731" y="247" text-anchor="middle">⑨ HTTP</text>
+      </svg>
+    </div>
+    <div class="legend">
+      <span><i class="sw mqtt"></i>MQTT (브로커를 거침)</span>
+      <span><i class="sw http"></i>HTTP</span>
+      <span><i class="sw tbd"></i>방식 미정</span>
+      <span>동그라미 숫자는 아래 표의 흐름 번호</span>
+    </div>
+  </section>
+
+  <section class="card" aria-label="흐름별 상태">
+    <h2>흐름별 내용과 준비 상태</h2>
+    <div class="scroll">
+      <table>
+        <thead>
+          <tr><th>#</th><th>무엇을</th><th>보내는 쪽 → 받는 쪽</th><th>방식 · 토픽/경로</th><th>상태</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="n">①</td>
+            <td>방 상태 (1초마다 + 바뀔 때), Node 켜짐·꺼짐</td>
+            <td><span class="who-node">Node</span> → <span class="who-wm">월드모델</span></td>
+            <td><span class="via mqtt">MQTT</span><code>eyear/v0/{room_id}/state</code><br><code>eyear/v0/{room_id}/status</code></td>
+            <td><span class="st bad">월드모델 쪽 필요</span>
+              <div class="note">Node는 0.2로 보냄. 월드모델 파서가 "0.1"만 받아서 실제 Node 메시지 421개 중 0개 통과. 버전만 맞추면 449개 모두 통과하고 방1 상태가 Node와 똑같이 따라감 (테스트로 확인). MQTT 구독 코드도 아직 없음. status 토픽은 아직 안 받음.</div></td>
+          </tr>
+          <tr>
+            <td class="n">②</td>
+            <td>집 전체 상태 (WorldSnapshot 2.0)</td>
+            <td><span class="who-wm">월드모델</span> → <span class="who-orch">중앙</span></td>
+            <td><span class="via http">HTTP</span><code>POST /v2/world/sessions</code><br><code>POST /v2/world/snapshots</code></td>
+            <td><span class="st bad">월드모델 쪽 필요</span>
+              <div class="note">중앙은 받는 경로가 있음. 월드모델에 보내는 코드가 아직 없음.</div></td>
+          </tr>
+          <tr>
+            <td class="n">③</td>
+            <td>말할 문장 ("A님, 주무실 건가요?", "네, 불을 켤게요")</td>
+            <td><span class="who-orch">중앙</span> → <span class="who-node">Node</span></td>
+            <td><span class="via mqtt">MQTT</span><code>eyear/v0/{room_id}/speak</code></td>
+            <td><span class="st ok">준비됨</span>
+              <div class="note">중앙이 보내는 형식(0.1)을 Node가 받음. 실제로 이어서 돌려 본 적은 없음.</div></td>
+          </tr>
+          <tr>
+            <td class="n">④</td>
+            <td>질문에 대한 대답, "하이 엘지" 뒤 명령 (텍스트만)</td>
+            <td><span class="who-node">Node</span> → <span class="who-orch">중앙</span></td>
+            <td><span class="via mqtt">MQTT</span><code>eyear/v0/{room_id}/voice/reply</code><br><code>eyear/v0/{room_id}/voice/command</code></td>
+            <td><span class="st ok">준비됨</span>
+              <div class="note">중앙이 0.x 버전을 모두 받고 모르는 필드는 무시. 실제로 이어서 돌려 본 적은 없음.</div></td>
+          </tr>
+          <tr>
+            <td class="n">⑤</td>
+            <td>가전 명령</td>
+            <td><span class="who-orch">중앙</span> → 가전</td>
+            <td><span class="via mqtt">MQTT</span><code>eyear/v0/device/{device_id}/command</code></td>
+            <td><span class="st unk">확인 필요</span>
+              <div class="note">중앙은 보내는 코드가 있음. 시뮬레이터는 지금 브라우저 안 버스로 같은 토픽 규칙을 씀. 실제 브로커에 붙는지 확인 필요.</div></td>
+          </tr>
+          <tr>
+            <td class="n">⑥</td>
+            <td>가전 상태·실행 결과</td>
+            <td>가전 → <span class="who-wm">월드모델</span></td>
+            <td><span class="via mqtt">MQTT</span><code>eyear/v0/device/{device_id}/state</code><br><code>eyear/v0/device/{device_id}/result</code></td>
+            <td><span class="st unk">확인 필요</span>
+              <div class="note">시뮬레이터 README 기준 토픽.</div></td>
+          </tr>
+          <tr>
+            <td class="n">⑦</td>
+            <td>가전 실행 결과 전달</td>
+            <td><span class="who-wm">월드모델</span> → <span class="who-orch">중앙</span></td>
+            <td><span class="via http">HTTP</span><code>POST /v2/world/device-results</code></td>
+            <td><span class="st bad">월드모델 쪽 필요</span>
+              <div class="note">②와 같이 보내는 코드 필요.</div></td>
+          </tr>
+          <tr>
+            <td class="n">⑧</td>
+            <td>사람별 선호 (예: A 24°C, B 26°C)</td>
+            <td><span class="who-app">앱</span> → <span class="who-wm">월드모델</span></td>
+            <td><span class="via tbd">미정</span></td>
+            <td><span class="st unk">정해야 함</span>
+              <div class="note">코드에서 연결 방식을 찾지 못함. 시연의 A = MEMBER_D(이효창)로 프로필을 맞춰야 함.</div></td>
+          </tr>
+          <tr>
+            <td class="n">⑨</td>
+            <td>운영자 제어 (일시정지·재개·초기화)</td>
+            <td><span class="who-app">앱</span> → <span class="who-orch">중앙</span></td>
+            <td><span class="via http">HTTP</span><code>POST /v1/control</code></td>
+            <td><span class="st unk">확인 필요</span>
+              <div class="note">중앙은 받는 경로가 있음. 앱 쪽 연결은 확인 못함.</div></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section aria-label="연결 테스트 전에 할 일">
+    <h2>처음 연결 테스트 전에 할 일</h2>
+    <div class="todo">
+      <div class="card">
+        <h3 class="who-node">신반석 (Node · 브로커)</h3>
+        <ul>
+          <li>브로커를 같은 와이파이에서 접속할 수 있게 열고 아이디·비밀번호 설정 (지금은 반석 노트북 안에서만 접속 가능)</li>
+          <li>브로커 주소와 접속 정보를 팀에 공유</li>
+          <li>시연 공간에서 Node 위치 고정 (옮기면 레이더 위치를 다시 재야 함)</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3 class="who-wm">이효창 (월드모델)</h3>
+        <ul>
+          <li><code>node_input.py</code>: schema_version "0.1", "0.2" 둘 다 받기 (한 줄)</li>
+          <li>브로커에서 <code>eyear/v0/+/state</code> 구독 → NodeHub에 넣기</li>
+          <li>중앙으로 HTTP 보내기 (②, ⑦)</li>
+          <li>identities·프로필: 시연의 A = MEMBER_D</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3 class="who-orch">송정빈 (중앙)</h3>
+        <ul>
+          <li>중앙 서버를 브로커 주소로 실행 (MQTT 구독·발행 코드는 이미 있음)</li>
+          <li>월드모델이 접속할 HTTP 주소 공유 (기본 포트 8765)</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3 class="who-app">정예원 (앱)</h3>
+        <ul>
+          <li>선호 설정을 월드모델에 넘기는 방식 정하기 (⑧)</li>
+          <li>운영자 제어를 <code>POST /v1/control</code>로 보내는지 확인 (⑨)</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <p class="foot">근거: 2026-11-19 기준 각 레포 코드. eyear-node(스키마 0.2), eyear-worldmodel <code>6e33647</code>, eyear-orchestrator(2026-11-19 커밋), 시뮬레이터 <code>sim/README.md</code>. 앱 연결은 코드에서 확인하지 못해 "확인 필요"로 표시했습니다. 틀린 곳이 있으면 eyear-team inbox로 알려 주세요.</p>
+</div>
+
+</body>
+</html>

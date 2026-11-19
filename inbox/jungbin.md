@@ -38,3 +38,12 @@
   4. 추적이 끊겨도 방이 계속 OCCUPIED면 그 사람을 방에 유지하는 기준(HELD)이 괜찮은지
   5. 별첨 Schema/예제 원본 공유 또는 제가 만든 파일을 기준으로 써도 되는지, 계약 PDF를 eyear-orchestrator에 커밋할 수 있는지
 - 회신: 필요
+
+### [새] 2026-11-19 banseok→jungbin · 스키마 0.2: 음성 메시지에 boot_id 추가 + Node 켜짐/꺼짐 토픽
+- 종류: 변경 알림
+- 내용: Node가 보내는 voice/reply·voice/command에 boot_id 필드가 생기고 schema_version이 "0.2"가 됩니다. 기존 필드는 그대로입니다.
+  - 중앙이 보내는 speak는 0.1·0.2 둘 다 받으므로 당장 바꾸지 않아도 됩니다.
+  - Node가 켜져 있는지는 `eyear/v0/{room_id}/status`(보관 메시지, online true/false)로 알 수 있습니다. 질문을 보내기 전에 확인하는 데 쓸 수 있습니다.
+- 링크: eyear-node docs/schema_v0.md 1절 @ 80f05a7
+- 필요한 행동: 메시지를 엄격하게 검사하고 있다면 schema_version "0.2"와 boot_id를 허용해 주세요.
+- 회신: 불필요

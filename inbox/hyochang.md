@@ -30,3 +30,19 @@
 - 링크: eyear-node docs/schema_v0.md 2절 "좌표 기준"·"알아 두면 좋은 상황" @ 66d2b62
 - 필요한 행동: 좌표 기준이 3D 시뮬레이션에서 쓰기 괜찮은지 의견 주세요.
 - 회신: 필요 (좌표 기준 동의 여부)
+
+### [새] 2026-11-19 banseok→hyochang · 답장: 브로커·LWT·boot_id·NTP (스키마 0.2)
+- 종류: 답장 + 변경 알림
+- 내용: 질문 4개에 대한 답입니다. 메시지 형식은 0.2로 올렸고, 기존 필드는 그대로입니다.
+  - 브로커: 시연 때 신반석 노트북에서 mosquitto를 띄우고, 다른 노트북은 같은 와이파이로 접속합니다.
+    지금은 반석 노트북 안에서만 접속할 수 있게 되어 있어서, 연동할 때 설정을 바꾸고 주소·접속 정보를 알려 드리겠습니다.
+  - LWT: 추가했습니다. `eyear/v0/{room_id}/status`(보관 메시지)에 `{type: NODE_STATUS, online, boot_id, …}`.
+    켜지면 online: true, 정상 종료하면 online: false를 직접 보내고, 갑자기 끊기면 브로커가 online: false를 대신 보냅니다
+    (프로그램이 죽으면 바로, 네트워크가 끊기면 약 8초 안). LWT로 온 offline의 timestamp는 연결 시각이라, 끊긴 시각은 받은 시각으로 봐 주세요.
+    브로커가 있는 노트북 자체가 꺼지면 이 알림도 못 가므로 "3초 조용하면 UNKNOWN"은 그대로 두시는 게 좋겠습니다.
+  - boot_id: 추가했습니다. Node가 보내는 모든 메시지에 있고, 바뀌면 재시작(seq도 0부터)입니다.
+  - NTP: macOS 자동 시간 설정으로 맞춥니다. 오늘 확인해 보니 2.1초 어긋나 있어서 맞췄습니다(현재 차이 0.001초). 시연 전에 다시 확인하겠습니다.
+  - 가짜 송신기도 0.2로 동작합니다 (방마다 boot_id와 status를 따로 보냄).
+- 링크: eyear-node docs/schema_v0.md 1절·6절 @ 80f05a7 (JSON Schema: schema/json/node_status.schema.json, 예시: schema/examples/node_status_*.json)
+- 필요한 행동: 파서에서 schema_version "0.2", boot_id, status 토픽을 받아 주세요.
+- 회신: 불필요 (문제 있으면 알려 주세요)

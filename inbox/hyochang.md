@@ -46,3 +46,18 @@
 - 링크: eyear-node docs/schema_v0.md 1절·6절 @ 80f05a7 (JSON Schema: schema/json/node_status.schema.json, 예시: schema/examples/node_status_*.json)
 - 필요한 행동: 파서에서 schema_version "0.2", boot_id, status 토픽을 받아 주세요.
 - 회신: 불필요 (문제 있으면 알려 주세요)
+
+### [새] 2026-11-19 banseok→hyochang · 실제 Node 메시지가 파서에서 전부 거절됨 (schema_version "0.2") + 시연 A = MEMBER_D
+- 종류: 요청 (작업을 막는 문제)
+- 내용: 오늘 시연 공간에서 실제 Node가 보낸 메시지 421개를 worldmodel/node_input.py에 넣어 보니 0개 통과했습니다.
+  NodeStateMessage.schema_version이 Literal["0.1"]이라 "0.2"를 거절합니다. 버전만 맞추면 449개 모두 accepted,
+  방1 재실·휴식·위치가 Node와 똑같이 따라가는 것까지 확인했습니다 (엔진 코드는 안 고치고 테스트에서만 확인).
+  - 시연 영상의 A 역할은 이효창(MEMBER_D)입니다. config/home_demo.json identities를 "MEMBER_D": "person_a"로,
+    A의 프로필(선호 24°C)도 identity MEMBER_D로 바꿔 주세요. 가짜 송신기 시나리오의 A도 MEMBER_D로 바꿨습니다
+    (방1 실물 Node가 MEMBER_D를 보내므로, 거실에서도 같은 사람이어야 함).
+  - 같이 알릴 것: 누워 있던 사람은 "문 쪽으로 나간 움직임"이 있어야 나간 것으로 보고, 그 전까지 센서가 못 봐도
+    OCCUPIED를 유지합니다. 이때 occupancy 신뢰도는 0.6입니다 (형식은 그대로, 값의 의미만 추가).
+- 링크: eyear-node docs/schema_v0.md "재실 판단", publisher/scenarios/summer_evening.yaml (2026-11-19 커밋)
+- 필요한 행동: ① node_input.py에서 schema_version "0.1", "0.2" 둘 다 받기 (한 줄) ② identities·프로필 A = MEMBER_D.
+  발표 전이라 가능하면 오늘.
+- 회신: 필요 (고친 뒤 알려 주세요. 실제 MQTT 연결 테스트 날짜도 정해요)

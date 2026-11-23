@@ -177,9 +177,7 @@ code { font-family: var(--font-mono); font-size: 12.5px; overflow-wrap: anywhere
         <text class="t-sub" x="788" y="98">방 메시지 → 집 전체 상태</text>
         <circle class="dot-bad" cx="794" cy="126" r="5"/>
         <text class="t-st bad" x="806" y="130">MQTT·HTTP 연결 코드 없음</text>
-        <circle class="dot-bad" cx="794" cy="148" r="5"/>
-        <text class="t-st bad" x="806" y="152">파서가 0.1만 받음</text>
-
+        
         <!-- 중앙 -->
         <rect class="box b-orch" x="770" y="410" width="250" height="150" rx="10"/>
         <text class="t-name" x="788" y="442">중앙 에이전트</text>
@@ -243,7 +241,7 @@ code { font-family: var(--font-mono); font-size: 12.5px; overflow-wrap: anywhere
             <td><span class="who-node">Node</span> → <span class="who-wm">월드모델</span></td>
             <td><span class="via mqtt">MQTT</span><code>eyear/v0/{room_id}/state</code><br><code>eyear/v0/{room_id}/status</code></td>
             <td><span class="st bad">월드모델 쪽 필요</span>
-              <div class="note">Node는 0.2로 보냄. 월드모델 파서가 "0.1"만 받아서 실제 Node 메시지 421개 중 0개 통과. 버전만 맞추면 449개 모두 통과하고 방1 상태가 Node와 똑같이 따라감 (테스트로 확인). MQTT 구독 코드도 아직 없음. status 토픽은 아직 안 받음.</div></td>
+              <div class="note">월드모델 파서가 0.2를 받음 (4b6cd25, 실제 Node 메시지로 확인). 남은 것: MQTT 구독 코드, status 토픽.</div></td>
           </tr>
           <tr>
             <td class="n">②</td>
@@ -299,7 +297,7 @@ code { font-family: var(--font-mono); font-size: 12.5px; overflow-wrap: anywhere
             <td><span class="who-app">앱</span> → <span class="who-wm">월드모델</span></td>
             <td><span class="via tbd">미정</span></td>
             <td><span class="st unk">정해야 함</span>
-              <div class="note">코드에서 연결 방식을 찾지 못함. 시연의 A = MEMBER_D(이효창)로 프로필을 맞춰야 함.</div></td>
+              <div class="note">코드에서 연결 방식을 찾지 못함. 월드모델 쪽 A 프로필은 MEMBER_D로 맞춤 (4b6cd25).</div></td>
           </tr>
           <tr>
             <td class="n">⑨</td>
@@ -328,11 +326,9 @@ code { font-family: var(--font-mono); font-size: 12.5px; overflow-wrap: anywhere
       <div class="card">
         <h3 class="who-wm">이효창 (월드모델)</h3>
         <ul>
-          <li><code>node_input.py</code>: schema_version "0.1", "0.2" 둘 다 받기 (한 줄)</li>
-          <li>브로커에서 <code>eyear/v0/+/state</code> 구독 → NodeHub에 넣기</li>
+                    <li>브로커에서 <code>eyear/v0/+/state</code> 구독 → NodeHub에 넣기</li>
           <li>중앙으로 HTTP 보내기 (②, ⑦)</li>
-          <li>identities·프로필: 시연의 A = MEMBER_D</li>
-        </ul>
+                  </ul>
       </div>
       <div class="card">
         <h3 class="who-orch">송정빈 (중앙)</h3>

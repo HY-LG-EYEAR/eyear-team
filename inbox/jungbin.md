@@ -47,3 +47,14 @@
 - 링크: eyear-node docs/schema_v0.md 1절 @ 80f05a7
 - 필요한 행동: 메시지를 엄격하게 검사하고 있다면 schema_version "0.2"와 boot_id를 허용해 주세요.
 - 회신: 불필요
+
+### [새] 2026-11-23 banseok→jungbin · 목요일 통합 준비: 중앙 실행 방법 + 진행표
+- 종류: 요청
+- 내용: 목요일(11-26) 진행표를 올렸습니다. 다른 노트북의 월드모델이 중앙에 HTTP로 보내야 해서
+  `MQTT_HOST=<브로커 주소> HOST=0.0.0.0`으로 띄워 주세요. 브로커는 반석 핫스팟 + 비밀번호 없음입니다
+  (지금 중앙 설정에 MQTT 아이디·비밀번호가 없어서). 중앙 ↔ Node 음성 메시지(speak, voice/reply, voice/command)
+  형식은 서로 맞는 것을 코드로 확인했습니다. 시연 영상 B 역할이라, 목요일에 카메라 앞에서 얼굴 등록이
+  MEMBER_B인지 C인지 확인하겠습니다.
+- 링크: eyear-team docs/integration_2026-11-26.md, docs/connections.md
+- 필요한 행동: 진행표의 "송정빈" 항목 확인
+- 회신: 불필요

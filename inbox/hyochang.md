@@ -61,3 +61,14 @@
 - 필요한 행동: ① node_input.py에서 schema_version "0.1", "0.2" 둘 다 받기 (한 줄) ② identities·프로필 A = MEMBER_D.
   발표 전이라 가능하면 오늘.
 - 회신: 필요 (고친 뒤 알려 주세요. 실제 MQTT 연결 테스트 날짜도 정해요)
+
+### [새] 2026-11-23 banseok→hyochang · 목요일 통합 준비: MQTT 구독·HTTP 보내기 + 장치 없이 미리 시험하는 법
+- 종류: 요청
+- 내용: 목요일(11-26) 진행표를 올렸습니다. 월드모델에 아직 MQTT 구독(eyear/v0/+/state → NodeHub)과
+  중앙으로 HTTP 보내기(sessions·snapshots·device-results)가 없어서, 목요일 전에 있으면 바로 연결해 볼 수 있습니다.
+  eyear-node 기본 설치(pip install -e .)만으로 실제 Node 기록(시연 공간 227초)을 MQTT로 재생할 수 있어서
+  장치 없이 미리 시험해 볼 수 있습니다. 예시 메시지의 A도 MEMBER_D로 바꿨습니다.
+  네트워크는 반석 핫스팟 + 비밀번호 없는 브로커로 합니다.
+- 링크: eyear-team docs/integration_2026-11-26.md, eyear-node recorder/replay.py·recorder/samples/
+- 필요한 행동: 목요일 전에 MQTT 구독·HTTP 보내기 준비, 재생으로 시험
+- 회신: 불필요 (막히면 알려 주세요)

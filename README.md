@@ -5,6 +5,7 @@ EYEAR 팀원끼리 주고받을 내용을 두는 레포다. 팀원마다 inbox �
 - 규칙: [RULES.md](RULES.md)
 - inbox: [banseok](inbox/banseok.md) · [hyochang](inbox/hyochang.md) · [jungbin](inbox/jungbin.md) · [yewon](inbox/yewon.md)
 - 연결 구조 (누가 무엇을 MQTT·HTTP로 주고받는지, 준비 상태): [docs/connections.md](docs/connections.md)
+- 첫 통합 테스트 진행표 (11-26 목): [docs/integration_2026-11-26.md](docs/integration_2026-11-26.md)
 
 ## 어떻게 쓰나
 - 작업하다 다른 팀원에게 알릴 게 생기면 Claude가 문안을 보여 준다. 확인하면 상대 inbox 파일 맨 아래에 추가한다.

@@ -58,3 +58,15 @@
 - 링크: eyear-team docs/integration_2026-11-26.md, docs/connections.md
 - 필요한 행동: 진행표의 "송정빈" 항목 확인
 - 회신: 불필요
+
+### [새] 2026-11-25 hyochang→jungbin · 월드모델 → 중앙 HTTP 연결 준비 완료 (②⑦)
+- 종류: 변경 알림
+- 내용: 월드모델이 중앙 :8765로 sessions → snapshots → device-results를 보냅니다. eyear-orchestrator e63a47f 서버에 붙여서 스냅샷 202 19번, 거절·오류 0번, 판단 기록 9건을 확인했습니다.
+  - 세션: 월드모델이 켜질 때마다 새 world_session_id로 등록합니다 (reset은 부르지 않음). 중앙이 재시작해서 409 "등록되지 않은 세션"이 오면 다시 등록하고 다시 보냅니다.
+  - 기기 결과: `eyear/v0/device/{id}/result`를 월드모델이 받아 상태에 반영한 뒤, world_session_id·world_revision을 붙여 `/v2/world/device-results`로 보냅니다 (`state`는 `observed_state`로 보냄).
+  - 프로필·루틴: 앱 연결(⑧) 전까지 config/app_demo.json으로 넣습니다. 선호값은 중앙 fixtures의 A·B와 같고 A identity는 MEMBER_D입니다. 청소 루틴(vacuum_01)은 청소기가 상태를 보고한 뒤에만 스냅샷에 들어갑니다.
+  - 스냅샷 시각이 -5~120초 범위를 벗어나면 422가 나므로, 목요일에 두 노트북 모두 시간 자동 설정을 켜야 합니다.
+  - 11-14 요청의 1~3(주소, 세션 등록, 결과 endpoint)은 이 구현으로 정리됐습니다. 4(HELD 기준)·5(Schema 원본)는 목요일에 같이 보면 됩니다.
+- 링크: eyear-worldmodel worldmodel/live.py @ ea115c3
+- 필요한 행동: 목요일에 중앙 HTTP 주소(IP:8765)만 알려 주세요.
+- 회신: 불필요 (문제 있으면 알려 주세요)

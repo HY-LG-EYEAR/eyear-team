@@ -72,3 +72,19 @@
 - 링크: eyear-team docs/integration_2026-11-26.md, eyear-node recorder/replay.py·recorder/samples/
 - 필요한 행동: 목요일 전에 MQTT 구독·HTTP 보내기 준비, 재생으로 시험
 - 회신: 불필요 (막히면 알려 주세요)
+
+### [새] 2026-11-25 banseok→hyochang · 답장: 샘플 기록 올림 + 가전 상태는 정빈과 정하기 + 미리 연결해 보니 질문이 두 번
+- 종류: 답장 + 요청
+- 내용:
+  ① 맞아요, .gitignore의 *.jsonl 때문에 빠졌습니다. 예외를 넣어 다시 올립니다 (eyear-node 다음 커밋).
+  ② Node는 가전 상태를 보내지 않습니다. 선택지: (a) 효창 브라우저 시뮬레이터를 브로커에 웹소켓으로 붙이기
+     (필요하면 브로커에 웹소켓 포트 열어 줄게요) (b) 작은 Python 가전 시뮬레이터 (c) 목요일은 중앙 DEVICE_TRANSPORT=mock으로 시작.
+     정빈과 정해서 알려 주세요.
+  ③ 반석 노트북에서 실제 Node 기록 재생 → worldmodel.live(ea115c3) → 중앙(LLM 없이)을 이어 봤습니다. 세션·스냅샷 모두 정상,
+     방1 재실·휴식·위치가 그대로 따라갑니다. 그런데 누운 뒤 얼굴이 인식되자(같은 Node track_id) person_id가
+     anon_node_room1_e0_t2 → person_a로 바뀌고 휴식 확정이 다시 시작돼서, 중앙이 같은 휴식에 질문을 두 번 보냈습니다.
+     같은 track의 신원이 정해질 때 ID를 이어 쓸지, 중앙에서 방·track으로 묶을지 정빈과 정해 주세요.
+  ④ pyproject 의존성에 paho-mqtt가 없어서 새로 설치하면 live가 안 뜰 수 있습니다.
+- 링크: eyear-node recorder/samples/ (0~100초 구간으로 ③ 재현), .gitignore
+- 필요한 행동: ②③ 정빈과 정하기, ④ 의존성 추가
+- 회신: 불필요 (목요일에 같이 확인)

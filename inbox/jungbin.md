@@ -97,3 +97,22 @@
 - 링크: eyear-worldmodel worldmodel/engine.py `_person_id` @ 07caa13
 - 필요한 행동: ① 호칭 수정, ③ mock으로 시작할지 확인
 - 회신: 필요 (③)
+
+### [새] 2026-11-26 hyochang→jungbin · 정정: 가전은 월드모델 시뮬레이터로, 중앙은 DEVICE_TRANSPORT=mqtt로
+- 종류: 변경 알림 + 요청 (바로 위 메시지 ③ 정정)
+- 내용:
+  - mock만으로는 조명 끄기·청소가 안 나옵니다. 중앙은 스냅샷에 있는 기기에만 명령하는데(agents.py 조명·청소기, central.py 음성 명령),
+    가전 상태를 보내는 쪽이 없으면 스냅샷 `devices`·`routines`가 비어 있습니다. 위 메시지의 mock 제안은 취소합니다.
+  - 그래서 월드모델에 가전 시뮬레이터를 만들었습니다: `python -m worldmodel.device_sim --mqtt <브로커>`.
+    기기는 중앙 fixtures와 같은 6대(vacuum_01, washer_01, ac_room1, ac_living, light_room1, curtain_room1)이고,
+    `eyear/v0/device/{id}/command`를 받아 `/result`·`/state`를 보냅니다. 청소기는 방마다 20초 청소 후 도크에서 completed.
+  - 중앙은 `DEVICE_TRANSPORT=mqtt MQTT_HOST=<브로커> HOST=0.0.0.0`으로 띄워 주세요. 결과는 지금처럼 월드모델이 `/v2/world/device-results`로 넘깁니다.
+  - 제 노트북에서 반석 샘플 재생 → live → 중앙(e63a47f, LLM 없이, mqtt) → 시뮬레이터로 확인한 것:
+    질문 → "네" → 커튼 0%·조명 off 명령 → completed. 나가면 에어컨 off, 청소 start_cleaning(room2, room1) → accepted → 26초 뒤 completed.
+    (방2가 EMPTY여야 청소가 시작돼서, 방2 EMPTY를 따로 보냈습니다. 당일엔 반석 가짜 송신기가 보냅니다.)
+  - 같이 본 것 (급하지 않음):
+    - 아는 사람은 "D님, …"으로 나갑니다 (MEMBER_D). ① 호칭 고칠 때 프로필 이름을 쓸지도 같이 정해 주세요.
+    - 방1 재실이 바뀔 때마다 세탁기가 low_noise ↔ normal을 13~17초 간격으로 오갑니다.
+- 링크: eyear-worldmodel worldmodel/device_sim.py, README "실행 (실제 연동)" (오늘 커밋)
+- 필요한 행동: 중앙을 DEVICE_TRANSPORT=mqtt로 실행
+- 회신: 불필요 (현장에서 같이 확인)

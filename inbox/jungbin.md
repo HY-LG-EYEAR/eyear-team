@@ -82,3 +82,18 @@
 - 링크: eyear-team docs/integration_2026-11-26.md, eyear-node recorder/samples/ (0~100초 구간으로 재현)
 - 필요한 행동: ①은 중앙에서, ②③은 효창과 정하기
 - 회신: 불필요 (목요일에 같이 확인)
+
+### [새] 2026-11-26 hyochang→jungbin · 질문 두 번은 월드모델에서 고침 (track 안에서 person_id 고정) + 호칭·가전 상태
+- 종류: 변경 알림 + 요청 (반석 11-25 메시지 ②③에 대한 답)
+- 내용:
+  - ② 월드모델에서 고쳤습니다. 같은 Node track은 끝날 때까지 person_id가 바뀌지 않고, 얼굴이 인식되면 identity·profile_id만 채워집니다.
+    누운 뒤 인식돼도 `anon_node_room1_e0_t2`가 그대로 MEMBER_D·profile_a가 됩니다. 중앙 코드는 바꿀 필요 없습니다.
+    새 track에서 얼굴로 잡히면 `person_a`로 나옵니다. 그래서 같은 사람이 track에 따라 다른 person_id일 수 있고,
+    구성원은 person_id가 아니라 identity·profile_id로 봐 주세요.
+    반석 샘플 전체(227초) 재생 → 중앙(e63a47f, LLM 없이): 질문 2번 → 1번, 나간 뒤 에피소드 정상 종료, 스냅샷 202만.
+  - ① 그래도 호칭은 고쳐야 합니다. 이 샘플은 얼굴 인식(46.7초)보다 휴식 확정이 먼저라, 한 번 나가는 질문이 "UNKNOWN님, …"입니다.
+    에피소드 시작 때 identity가 UNKNOWN·GUEST면 호칭 없이 물어 주세요 (voice.py `question_text`).
+  - ③ 가전 상태 보낼 쪽이 아직 없어서, 오늘은 `DEVICE_TRANSPORT=mock`으로 시작하자고 제안합니다. 월드모델은 `eyear/v0/device/+/state`·`+/result`를 이미 구독하고 있어서, 시뮬레이터를 붙이면 바로 받습니다.
+- 링크: eyear-worldmodel worldmodel/engine.py `_person_id` @ 07caa13
+- 필요한 행동: ① 호칭 수정, ③ mock으로 시작할지 확인
+- 회신: 필요 (③)

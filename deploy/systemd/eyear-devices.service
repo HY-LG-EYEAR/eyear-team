@@ -1,0 +1,16 @@
+[Unit]
+Description=EYEAR 가전 시뮬레이터 (device_sim)
+After=network-online.target mosquitto.service
+Wants=network-online.target
+
+[Service]
+User=ubuntu
+WorkingDirectory=/home/ubuntu/eyear-worldmodel
+
+ExecStart=/home/ubuntu/eyear-worldmodel/.venv/bin/python -m worldmodel.device_sim --mqtt 127.0.0.1:1884
+Restart=on-failure
+RestartSec=5
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=multi-user.target

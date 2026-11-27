@@ -1,0 +1,9 @@
+[Unit]
+Description=EYEAR 자동 배포 (GitHub main → 이 서버)
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=ubuntu
+ExecStart=/home/ubuntu/deploy/eyear-deploy.sh
+TimeoutStartSec=900

@@ -1,0 +1,16 @@
+[Unit]
+Description=EYEAR 앱 백엔드 (Spring Boot, :8081)
+After=network-online.target postgresql.service
+Wants=network-online.target
+
+[Service]
+User=ubuntu
+WorkingDirectory=/home/ubuntu/eyear-app/backend
+EnvironmentFile=/home/ubuntu/.config/eyear/app.env
+ExecStart=/usr/bin/java -jar /home/ubuntu/deploy/app.jar --spring.config.additional-location=file:/home/ubuntu/secret.properties
+Restart=on-failure
+RestartSec=10
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,16 @@
+[Unit]
+Description=EYEAR 중앙 에이전트 (orchestrator, :8765)
+After=network-online.target mosquitto.service
+Wants=network-online.target
+
+[Service]
+User=ubuntu
+WorkingDirectory=/home/ubuntu/eyear-orchestrator
+
+ExecStart=/home/ubuntu/eyear-orchestrator/.venv/bin/python -m orchestrator.server
+Restart=on-failure
+RestartSec=5
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,9 @@
+[Unit]
+Description=EYEAR 자동 배포: 1분마다 GitHub 확인
+
+[Timer]
+OnBootSec=2min
+OnUnitInactiveSec=60s
+
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,16 @@
+[Unit]
+Description=EYEAR 월드모델 (MQTT 127.0.0.1:1884 → 중앙)
+After=network-online.target mosquitto.service eyear-orchestrator.service
+Wants=network-online.target
+
+[Service]
+User=ubuntu
+WorkingDirectory=/home/ubuntu/eyear-worldmodel
+
+ExecStart=/home/ubuntu/eyear-worldmodel/.venv/bin/python -m worldmodel.live --mqtt 127.0.0.1:1884
+Restart=on-failure
+RestartSec=5
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=multi-user.target

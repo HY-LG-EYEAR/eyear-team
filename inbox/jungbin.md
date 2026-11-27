@@ -126,3 +126,11 @@
      테스트 102개 통과, CLAUDE.md 기록). 11-26 EC2 시험 때 서버에 임시로 넣었던 것을 정식으로 올린 것. EC2 서버도 이 커밋으로 갱신함.
 - 링크: eyear-orchestrator @ 3f8f041, eyear-node docs/enroll_api.md
 - 필요한 행동: 작업 전에 eyear-orchestrator pull. 회신 불필요
+
+### [새] 2026-11-27 banseok→jungbin · EC2 서버 자동 배포 시작
+- 종류: 변경 알림
+- 내용: eyear-orchestrator·eyear-worldmodel·eyear-app의 main에 push하면 1~2분 안에 EC2(13.125.114.142)에 자동 반영됨.
+  설치·빌드 실패나 실행 직후 죽으면 이전 버전으로 자동 복구. 그래도 깨진 코드는 main에 올리지 말 것 (실험은 브랜치에서).
+  서버에서 코드를 직접 고치지 말 것 (자동 배포가 멈춤). 발표 당일은 동결함.
+- 링크: 없음 (서버 ~/deploy/deploy.log에서 배포 기록 확인 가능, 필요하면 반석에게)
+- 필요한 행동: 없음. 회신 불필요

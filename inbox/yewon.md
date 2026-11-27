@@ -36,3 +36,16 @@
 - 링크: eyear-worldmodel docs/고민_목록.md A13, A16, A20
 - 필요한 행동: 위 2가지 의견과 배치도 저장 위치
 - 회신: 필요
+
+### [새] 2026-11-27 banseok→yewon · 얼굴·목소리 등록을 앱에서 (Node가 처리)
+- 종류: 요청
+- 내용: 가족 얼굴·목소리를 앱에서 등록하기로 함 (팀 논의, 정빈 질문에서 시작).
+  사진·녹음은 앱 백엔드(EC2)로 보내지 않고, 같은 와이파이의 Node로 바로 보냄 → Node가 특징값만 저장하고 원본은 버림
+  (생체정보는 집 밖으로 안 나감, R-10). 앱 백엔드 DB에는 신원 ID(MEMBER_x)·이름·선호 온도·등록 여부만.
+  ① 앱: 가족 추가 화면(이름·선호 온도) + 얼굴 사진 5장 촬영 + 문장 5개 녹음(각 2~6초) → Node 주소로 전송, 결과 표시
+  ② 앱 설정: Node 주소(IP)와 6자리 연결 코드 입력 (시연은 같은 핫스팟)
+  ③ 백엔드: 가족 프로필 테이블 (home_id, identity, display_name, preferred_min_c, preferred_max_c, face_enrolled, voice_enrolled)
+  Node 쪽은 구현 끝남 (`python -m enroll.server`, 포트 8770). 형식이 불편하면 맞춰서 바꿀게요.
+- 링크: eyear-node docs/enroll_api.md (Node 등록 주소 형식, 초안 0.1)
+- 필요한 행동: ①~③ 가능 여부와 발표 전에 할 수 있는지. 사진·녹음 파일 형식(jpg, m4a 등) 알려 주기
+- 회신: 필요

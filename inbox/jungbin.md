@@ -116,3 +116,13 @@
 - 링크: eyear-worldmodel worldmodel/device_sim.py, README "실행 (실제 연동)" (오늘 커밋)
 - 필요한 행동: 중앙을 DEVICE_TRANSPORT=mqtt로 실행
 - 회신: 불필요 (현장에서 같이 확인)
+
+### [새] 2026-11-27 banseok→jungbin · 등록 질문 답장 + 호칭 코드 수정 알림
+- 종류: 답장 + 변경 알림
+- 내용:
+  ① 얼굴·목소리 등록은 앱에서 하되, 사진·녹음은 같은 와이파이의 Node로 바로 보내 Node가 특징값만 저장 (앱 DB·EC2에는 생체정보 없음).
+     앱 DB에는 이름·선호 온도만 → 나중에 호칭 표(DISPLAY_NAMES)와 효창 app_demo.json을 앱 API로 바꿀 수 있음 (발표 전엔 지금대로).
+  ② eyear-orchestrator에 호칭 반영: "효창님, 주무실 건가요?" / "네 효창님, 불을 켤게요." (voice.py DISPLAY_NAMES·personalize_ack,
+     테스트 102개 통과, CLAUDE.md 기록). 11-26 EC2 시험 때 서버에 임시로 넣었던 것을 정식으로 올린 것. EC2 서버도 이 커밋으로 갱신함.
+- 링크: eyear-orchestrator @ 3f8f041, eyear-node docs/enroll_api.md
+- 필요한 행동: 작업 전에 eyear-orchestrator pull. 회신 불필요
